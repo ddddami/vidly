@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { getGenres } from "../services/fakeGenreService";
-import { getMovies } from "../services/fakeMovieService";
-import filter from "../utils/filter";
-import paginate from "../utils/paginate";
+import _ from "lodash";
 import ListGroup from "./common/ListGroup";
 import Pagination from "./common/Pagination";
 import MoviesTable from "./MoviesTable";
+import { getGenres } from "../services/fakeGenreService";
+import { getMovies } from "../services/fakeMovieService";
+import paginate from "../utils/paginate";
+import filter from "../utils/filter";
 class Movies extends Component {
   state = {
     movies: [],
@@ -13,9 +14,10 @@ class Movies extends Component {
     pageSize: 4,
     genres: [],
     selectedGenre: "",
+    sortColumn: { path: "title", order: "asc" },
   };
   componentDidMount() {
-    const genres = [{ name: "All Genres" }, ...getGenres()];
+    const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
     this.setState({ movies: getMovies(), genres });
   }
   handleDelete = (movie) => {
@@ -40,19 +42,33 @@ class Movies extends Component {
   handleGenreSelect = (genre) => {
     this.setState({ selectedGenre: genre, currentPage: 1 });
   };
+  handleSort = (path) => {
+    const sortColumn = { ...this.state.sortColumn };
+    if (sortColumn.path === path)
+      sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
+    else {
+      sortColumn.path = path;
+      sortColumn.order = "asc";
+    }
+
+    this.setState({ sortColumn });
+  };
   render() {
     const {
       currentPage,
       pageSize,
       genres,
       selectedGenre,
+      sortColumn,
       movies: allMovies,
     } = this.state;
+
     const filtered =
       selectedGenre && selectedGenre._id
         ? filter(allMovies, this.state.selectedGenre._id)
         : allMovies;
-    const movies = paginate(filtered, currentPage, pageSize);
+    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+    const movies = paginate(sorted, currentPage, pageSize);
     if (allMovies.length === 0)
       return <p>There are no movies in the database!</p>;
     return (
@@ -74,6 +90,7 @@ class Movies extends Component {
             movies={movies}
             onDelete={this.handleDelete}
             onToggleLike={this.handleToggleLike}
+            onSort={this.handleSort}
           />
           <Pagination
             itemsCount={filtered.length}
