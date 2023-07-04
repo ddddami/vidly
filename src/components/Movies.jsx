@@ -11,9 +11,11 @@ class Movies extends Component {
     currentPage: 1,
     pageSize: 4,
     genres: [],
+    selectedGenre: "",
   };
   componentDidMount() {
-    this.setState({ movies: getMovies(), genres: getGenres() });
+    const genres = [{ name: "All Genres" }, ...getGenres()];
+    this.setState({ movies: getMovies(), genres });
   }
   handleDelete = (movie) => {
     const movies = this.state.movies.filter((m) => m._id !== movie._id);
@@ -32,20 +34,26 @@ class Movies extends Component {
     // this.setState({ movies });
   };
   handlePageChange = (page) => {
-    console.log("Page changed", page);
     this.setState({ currentPage: page });
+  };
+  handleGenreSelect = (genre) => {
+    this.setState({ selectedGenre: genre });
   };
   render() {
     const { length: count } = this.state.movies;
-    const { currentPage, pageSize, genres, selectedG } = this.state;
+    const { currentPage, pageSize, genres, selectedGenre } = this.state;
     const movies = paginate(this.state.movies, currentPage, pageSize);
-    console.log(this.state.movies);
-    console.log(movies);
     if (count === 0) return <p>There are no movies in the database!</p>;
     return (
       <div className="row">
         <div className="col-3">
-          <ListGroup items={genres} targetName="name" targetValue="_id" />
+          <ListGroup
+            items={genres}
+            selectedItem={selectedGenre}
+            onItemChange={this.handleGenreSelect}
+            targetName="name"
+            targetValue="_id"
+          />
         </div>
         <div className="col">
           {count && <p>Showing {count} movies in the database!</p>}

@@ -1,4 +1,10 @@
-const ListGroup = ({ items, selectedItem, targetName, targetValue }) => {
+const ListGroup = ({
+  items,
+  selectedItem,
+  onItemChange,
+  targetName,
+  targetValue,
+}) => {
   return (
     <ul className="list-group">
       {items.map((item) => (
@@ -8,7 +14,7 @@ const ListGroup = ({ items, selectedItem, targetName, targetValue }) => {
             selectedItem === item ? "list-group-item active" : "list-group-item"
           }
           onClick={() => {
-            console.log(item);
+            onItemChange(item);
           }}
         >
           {item[targetName]}
