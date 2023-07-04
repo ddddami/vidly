@@ -3,6 +3,7 @@ import { getMovies } from "../services/fakeMovieService";
 import Like from "./common/Like";
 import Pagination from "./common/Pagination";
 import paginate from "../utils/paginate";
+import filter from "../utils/filter";
 import ListGroup from "./common/ListGroup";
 import { getGenres } from "../services/fakeGenreService";
 class Movies extends Component {
@@ -37,13 +38,23 @@ class Movies extends Component {
     this.setState({ currentPage: page });
   };
   handleGenreSelect = (genre) => {
-    this.setState({ selectedGenre: genre });
+    this.setState({ selectedGenre: genre, currentPage: 1 });
   };
   render() {
-    const { length: count } = this.state.movies;
-    const { currentPage, pageSize, genres, selectedGenre } = this.state;
-    const movies = paginate(this.state.movies, currentPage, pageSize);
-    if (count === 0) return <p>There are no movies in the database!</p>;
+    const {
+      currentPage,
+      pageSize,
+      genres,
+      selectedGenre,
+      movies: allMovies,
+    } = this.state;
+    const filtered =
+      selectedGenre && selectedGenre._id
+        ? filter(allMovies, this.state.selectedGenre._id)
+        : allMovies;
+    const movies = paginate(filtered, currentPage, pageSize);
+    if (allMovies.length === 0)
+      return <p>There are no movies in the database!</p>;
     return (
       <div className="row">
         <div className="col-3">
@@ -56,7 +67,9 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
-          {count && <p>Showing {count} movies in the database!</p>}
+          {allMovies.length && (
+            <p>Showing {filtered.length} movies in the database!</p>
+          )}
           <table className="table">
             <thead>
               <tr>
@@ -96,7 +109,7 @@ class Movies extends Component {
             </tbody>
           </table>
           <Pagination
-            itemsCount={count}
+            itemsCount={filtered.length}
             currentPage={currentPage}
             pageSize={pageSize}
             onPageChange={this.handlePageChange}
