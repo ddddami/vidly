@@ -1,9 +1,9 @@
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 const Like = ({ liked, onToggleLike }) => {
   return liked ? (
-    <BsHeartFill style={{ cursor: "pointer" }} onClick={onToggleLike} />
+    <BsHeartFill className="clickable" onClick={onToggleLike} />
   ) : (
-    <BsHeart style={{ cursor: "pointer" }} onClick={onToggleLike} />
+    <BsHeart className="clickable" onClick={onToggleLike} />
   );
 };
 
