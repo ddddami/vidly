@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 class TableHeader extends Component {
   raiseSort = (path) => {
     const sortColumn = { ...this.props.sortColumn };
@@ -10,6 +11,12 @@ class TableHeader extends Component {
     }
     this.props.onSort(sortColumn);
   };
+
+  renderSortIcon = (column) => {
+    const { path, order } = this.props.sortColumn;
+    if (column.path !== path) return null;
+    return order === "asc" ? <FaCaretUp /> : <FaCaretDown />;
+  };
   render() {
     return (
       <thead>
@@ -19,7 +26,7 @@ class TableHeader extends Component {
               key={col.path || col.key}
               onClick={() => this.raiseSort(col.path)}
             >
-              {col.label}
+              {col.label} {this.renderSortIcon(col)}
             </th>
           ))}
         </tr>
