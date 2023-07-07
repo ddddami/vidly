@@ -10,9 +10,11 @@ class TableBody extends Component {
     return (
       <tbody>
         {data.map((item) => (
-          <tr>
+          <tr key={item._id}>
             {columns.map((column) => (
-              <td>{this.renderCell(item, column)}</td>
+              <td key={item._id + (column.path || column.key)}>
+                {this.renderCell(item, column)}
+              </td>
             ))}
           </tr>
         ))}
