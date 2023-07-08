@@ -21,7 +21,7 @@ class LoginForm extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const errors = this.validate();
-    this.setState({ errors });
+    this.setState({ errors: errors || {} });
     if (errors) return;
 
     // Call the server
@@ -33,23 +33,25 @@ class LoginForm extends Component {
     this.setState({ account });
   };
   render() {
-    const { username, password } = this.state.account;
+    const { account, errors } = this.state;
     return (
       <div>
         <h1>Login</h1>
         <form onSubmit={this.handleSubmit}>
           <Input
             autoFocus
-            value={username}
+            value={account.username}
             label="Username"
             name="username"
             onChange={this.handleChange}
+            error={errors.username}
           />
           <Input
             name="password"
             label="Password"
-            value={password}
+            value={account.password}
             onChange={this.handleChange}
+            error={errors.password}
           />
 
           <button className="btn btn-primary">Login</button>

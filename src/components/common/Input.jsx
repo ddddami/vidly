@@ -1,4 +1,4 @@
-const Input = ({ name, label, value, onChange, autoFocus }) => {
+const Input = ({ name, label, value, onChange, autoFocus, error }) => {
   return (
     <div className="mb-3">
       <label htmlFor={name}>{label}</label>
@@ -11,6 +11,7 @@ const Input = ({ name, label, value, onChange, autoFocus }) => {
         className="form-control"
         onChange={onChange}
       />
+      {error && <small className="text-danger form-text">{error}</small>}
     </div>
   );
 };
