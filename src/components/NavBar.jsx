@@ -23,6 +23,11 @@ const NavBar = () => {
               Rentals
             </NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink to="/login" className="px-2 nav-link">
+              Login
+            </NavLink>
+          </li>
         </ul>
       </div>
     </nav>

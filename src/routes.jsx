@@ -5,6 +5,7 @@ import Customers from "./components/Customers";
 import Rentals from "./components/Rentals";
 import MovieForm from "./components/MovieForm";
 import ErrorPage from "./pages/ErrorPage";
+import LoginForm from "./components/LoginForm";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
       { path: "/movies/:id", element: <MovieForm /> },
       { path: "/customers", element: <Customers /> },
       { path: "/rentals", element: <Rentals /> },
+      { path: "/login", element: <LoginForm /> },
     ],
   },
 ]);
