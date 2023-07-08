@@ -1,12 +1,7 @@
 import "./App.css";
-import Movies from "./components/Movies";
 
 function App() {
-  return (
-    <main className="container">
-      <Movies />
-    </main>
-  );
+  return <h1>App</h1>;
 }
 
 export default App;
