@@ -1,6 +1,8 @@
 import { Component } from "react";
+import Input from "./Input";
 class Form extends Component {
   state = { data: {}, errors: {} };
+
   validate = () => {
     const { data } = this.state;
     const options = { abortEarly: false };
@@ -31,6 +33,28 @@ class Form extends Component {
     const data = { ...this.state.data };
     data[input.name] = input.value;
     this.setState({ data, errors });
+  };
+  renderButton = (label) => {
+    return (
+      <button className="btn btn-primary" disabled={this.validate()}>
+        {label}
+      </button>
+    );
+  };
+  renderInput = (name, label, type = "text", autoFocus = false) => {
+    const { data, errors } = this.state;
+
+    return (
+      <Input
+        type={type}
+        name={name}
+        label={label}
+        value={data[name]}
+        onChange={this.handleChange}
+        error={errors[name]}
+        autoFocus={autoFocus}
+      />
+    );
   };
 }
 
