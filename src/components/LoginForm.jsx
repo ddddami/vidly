@@ -25,12 +25,9 @@ class LoginForm extends Component {
     return errors;
   };
   validateProperty = ({ name, value }) => {
-    if (name === "username") {
-      if (value.trim() === "") return "Username field is required";
-    }
-    if (name === "password") {
-      if (value.trim() === "") return "Password field is required";
-    }
+    const schema = this.schema.extract(name);
+    const { error } = schema.validate(value);
+    return error ? error.details[0].message : null;
   };
 
   handleSubmit = (e) => {
