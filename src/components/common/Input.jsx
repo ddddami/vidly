@@ -1,8 +1,10 @@
 const Input = ({ name, label, error, ...rest }) => {
   return (
     <div className="mb-3">
-      <label htmlFor={name}>{label}</label>
-      <input {...rest} name={name} id={name} className="form-control" />
+      <label className="mb-1" htmlFor={name}>
+        {label}
+      </label>
+      <input name={name} id={name} className="form-control" {...rest} />
       {error && <small className="text-danger form-text">{error}</small>}
     </div>
   );
