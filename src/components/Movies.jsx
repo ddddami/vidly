@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import _ from "lodash";
 import ListGroup from "./common/ListGroup";
 import Pagination from "./common/Pagination";
@@ -88,6 +89,9 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
+          <Link className="mb-3 btn btn-primary" to="/movies/new">
+            New Movie
+          </Link>
           {allMovies.length && <p>Showing {count} movies in the database!</p>}
           <MoviesTable
             movies={movies}

@@ -1,5 +1,6 @@
 import { Component } from "react";
 import Input from "./Input";
+import Select from "./Select";
 class Form extends Component {
   state = { data: {}, errors: {} };
 
@@ -53,6 +54,20 @@ class Form extends Component {
         onChange={this.handleChange}
         error={errors[name]}
         autoFocus={autoFocus}
+      />
+    );
+  };
+
+  renderSelect = (name, label, options) => {
+    const { data, errors } = this.state;
+    return (
+      <Select
+        name={name}
+        label={label}
+        value={data[name]}
+        options={options}
+        onChange={this.handleChange}
+        errors={errors[name]}
       />
     );
   };
