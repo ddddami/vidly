@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import _ from "lodash";
+import MoviesTable from "./MoviesTable";
 import ListGroup from "./common/ListGroup";
 import Pagination from "./common/Pagination";
-import MoviesTable from "./MoviesTable";
+import SearchBox from "./common/SearchBox";
 import { getGenres } from "../services/fakeGenreService";
 import { getMovies } from "../services/fakeMovieService";
 import paginate from "../utils/paginate";
@@ -15,6 +16,7 @@ class Movies extends Component {
     pageSize: 4,
     genres: [],
     selectedGenre: "",
+    searchQuery: "",
     sortColumn: { path: "title", order: "asc" },
   };
   componentDidMount() {
@@ -41,10 +43,13 @@ class Movies extends Component {
     this.setState({ currentPage: page });
   };
   handleGenreSelect = (genre) => {
-    this.setState({ selectedGenre: genre, currentPage: 1 });
+    this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 });
   };
   handleSort = (sortColumn) => {
     this.setState({ sortColumn });
+  };
+  handleSearch = (searchQuery) => {
+    this.setState({ searchQuery, selectedGenre: "", currentPage: 1 });
   };
 
   getPagedData() {
@@ -52,14 +57,18 @@ class Movies extends Component {
       currentPage,
       pageSize,
       selectedGenre,
+      searchQuery,
       sortColumn,
       movies: allMovies,
     } = this.state;
 
-    const filtered =
-      selectedGenre && selectedGenre._id
-        ? filter(allMovies, this.state.selectedGenre._id)
-        : allMovies;
+    let filtered = allMovies;
+    if (searchQuery)
+      filtered = allMovies.filter((m) =>
+        m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
+    else if (selectedGenre && selectedGenre._id)
+      filtered = filter(allMovies, this.state.selectedGenre._id);
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
     const movies = paginate(sorted, currentPage, pageSize);
     return { count: filtered.length, data: movies };
@@ -92,7 +101,14 @@ class Movies extends Component {
           <Link className="mb-3 btn btn-primary" to="/movies/new">
             New Movie
           </Link>
-          {allMovies.length && <p>Showing {count} movies in the database!</p>}
+          {allMovies.length && (
+            <p style={{ margin: 0 }}>Showing {count} movies in the database!</p>
+          )}
+
+          <SearchBox
+            onSearch={this.handleSearch}
+            value={this.state.searchQuery}
+          />
           <MoviesTable
             movies={movies}
             onDelete={this.handleDelete}
