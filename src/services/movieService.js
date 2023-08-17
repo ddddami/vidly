@@ -1,9 +1,16 @@
 import http from "./httpService";
-import { apiUrl } from "../config.json";
+import config from "../config.json";
 export function getMovies() {
-  return http.get(apiUrl);
+  return http.get(config.apiUrl + "/movies");
 }
-
+export function getMovie(id) {
+  return http.get(config.apiUrl + "/movies/" + id);
+}
+export function saveMovie(movie) {
+  if (movie._id)
+    return http.put(config.apiUrl + "/movies/" + movie._id + "/", movie);
+  return http.post(config.apiUrl + "/movies/", movie);
+}
 export function deleteMovie(id) {
-  return http.delete(apiUrl + "/" + id);
+  return http.delete(config.apiUrl + "/movies/" + id);
 }

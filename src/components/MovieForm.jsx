@@ -2,8 +2,8 @@ import React from "react";
 import Joi from "joi";
 import Form from "./common/Form";
 import withRouter from "../hoc/withRouter";
-import { getGenres } from "../services/fakeGenreService";
-import { getMovie, saveMovie } from "../services/fakeMovieService";
+import { getGenres } from "../services/genreService";
+import { getMovie, saveMovie } from "../services/movieService";
 import { Navigate } from "react-router-dom";
 
 class MovieForm extends Form {
@@ -18,17 +18,23 @@ class MovieForm extends Form {
     genres: [],
     redirect: false,
   };
-  componentDidMount() {
-    this.setState({ genres: getGenres() });
+  async componentDidMount() {
+    const { data: genres } = await getGenres();
+    this.setState({ genres });
 
     const movieId = this.props.params.id;
     if (movieId === "new") return;
-    const movie = getMovie(movieId);
-    if (!movie) {
-      this.setState({ redirect: true });
-      return;
+    try {
+      const { data: movie } = await getMovie(movieId);
+      if (!movie) {
+        this.setState({ redirect: true });
+        return;
+      }
+      this.setState({ data: this.mapToViewModel(movie) });
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        alert("The movie has already been deleted.");
     }
-    this.setState({ data: this.mapToViewModel(movie) });
   }
   schema = Joi.object({
     _id: Joi.string(),
