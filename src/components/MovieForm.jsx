@@ -18,23 +18,26 @@ class MovieForm extends Form {
     genres: [],
     redirect: false,
   };
-  async componentDidMount() {
+  async populateGenres() {
     const { data: genres } = await getGenres();
     this.setState({ genres });
+  }
 
-    const movieId = this.props.params.id;
-    if (movieId === "new") return;
+  async populateMovies() {
     try {
+      const movieId = this.props.params.id;
+      if (movieId === "new") return;
       const { data: movie } = await getMovie(movieId);
-      if (!movie) {
-        this.setState({ redirect: true });
-        return;
-      }
       this.setState({ data: this.mapToViewModel(movie) });
     } catch (ex) {
       if (ex.response && ex.response.status === 404)
         alert("The movie has already been deleted.");
+      return this.props.navigate("/not-found");
     }
+  }
+  async componentDidMount() {
+    await this.populateGenres();
+    await this.populateMovies();
   }
   schema = Joi.object({
     _id: Joi.string(),
