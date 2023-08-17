@@ -1,9 +1,9 @@
 import http from "./httpService";
-const url = "http://localhost:8000/api/movies";
+import { apiUrl } from "../config.json";
 export function getMovies() {
-  return http.get(url);
+  return http.get(apiUrl);
 }
 
 export function deleteMovie(id) {
-  return http.delete(url + "/" + id);
+  return http.delete(apiUrl + "/" + id);
 }
