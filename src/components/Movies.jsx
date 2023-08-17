@@ -5,7 +5,7 @@ import MoviesTable from "./MoviesTable";
 import ListGroup from "./common/ListGroup";
 import Pagination from "./common/Pagination";
 import SearchBox from "./common/SearchBox";
-import { getMovies } from "../services/fakeMovieService";
+import { getMovies, deleteMovie } from "../services/movieService";
 import { getGenres } from "../services/genreService";
 import paginate from "../utils/paginate";
 import filter from "../utils/filter";
@@ -21,12 +21,22 @@ class Movies extends Component {
   };
   async componentDidMount() {
     const { data } = await getGenres();
+    const { data: movies } = await getMovies();
     const genres = [{ _id: "", name: "All Genres" }, ...data];
-    this.setState({ movies: getMovies(), genres });
+    this.setState({ movies, genres });
   }
-  handleDelete = (movie) => {
+  handleDelete = async (movie) => {
+    const orignalMovies = this.state.movies;
     const movies = this.state.movies.filter((m) => m._id !== movie._id);
     this.setState({ movies });
+    try {
+      await deleteMovie(movie._id);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404) {
+        alert("This movie has already been deleted.");
+        this.setState({ movies: orignalMovies });
+      }
+    }
   };
 
   handleToggleLike = (movie) => {
