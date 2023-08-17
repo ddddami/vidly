@@ -5,8 +5,8 @@ import MoviesTable from "./MoviesTable";
 import ListGroup from "./common/ListGroup";
 import Pagination from "./common/Pagination";
 import SearchBox from "./common/SearchBox";
-import { getGenres } from "../services/fakeGenreService";
 import { getMovies } from "../services/fakeMovieService";
+import { getGenres } from "../services/genreService";
 import paginate from "../utils/paginate";
 import filter from "../utils/filter";
 class Movies extends Component {
@@ -19,8 +19,9 @@ class Movies extends Component {
     searchQuery: "",
     sortColumn: { path: "title", order: "asc" },
   };
-  componentDidMount() {
-    const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
+  async componentDidMount() {
+    const { data } = await getGenres();
+    const genres = [{ _id: "", name: "All Genres" }, ...data];
     this.setState({ movies: getMovies(), genres });
   }
   handleDelete = (movie) => {
