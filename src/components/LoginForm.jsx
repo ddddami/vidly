@@ -2,6 +2,7 @@ import React from "react";
 import Joi from "joi";
 import Form from "./common/Form";
 import { login } from "../services/authService";
+import withRouter from "../hoc/withRouter";
 
 class LoginForm extends Form {
   state = {
@@ -21,7 +22,10 @@ class LoginForm extends Form {
     // Call the server
     try {
       const { data } = this.state;
-      await login(data.username, data.password);
+      const { data: result } = await login(data.username, data.password);
+      localStorage.setItem("access", result.access);
+      localStorage.setItem("refresh", result.access);
+      this.props.navigate("/");
     } catch (ex) {
       if (ex.response && ex.response.status === 401) {
         const errors = { ...this.state.errors };
@@ -45,4 +49,4 @@ class LoginForm extends Form {
   }
 }
 
-export default LoginForm;
+export default withRouter(LoginForm);
