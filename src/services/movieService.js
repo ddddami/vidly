@@ -1,8 +1,8 @@
 import http from "./httpService";
 import config from "../config.json";
-const moviesUrl = config.apiUrl + "/movies";
+const moviesUrl = config.apiUrl + "/api/movies";
 function movieUrl(id) {
-  return `${config.apiUrl}/movies/${id}/`;
+  return `${config.apiUrl}/api/movies/${id}/`;
 }
 export function getMovies() {
   return http.get(moviesUrl);
