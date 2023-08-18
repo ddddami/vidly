@@ -2,6 +2,8 @@ import React from "react";
 import Joi from "joi";
 import * as UserService from "../services/userService";
 import Form from "./common/Form";
+import withRouter from "../hoc/withRouter";
+import { login } from "../services/authService";
 
 class RegisterForm extends Form {
   state = {
@@ -19,7 +21,13 @@ class RegisterForm extends Form {
   });
   doSubmit = async () => {
     try {
-      await UserService.register(this.state.data);
+      const { data } = this.state;
+      await UserService.register(data);
+      // To improve: (Don't assume call to server for login wont fail)
+      const { data: result } = await login(data.username, data.password);
+      localStorage.setItem("access", result.access);
+      localStorage.setItem("refresh", result.access);
+      this.props.navigate("/");
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         const errors = { ...this.state.errors };
@@ -43,4 +51,4 @@ class RegisterForm extends Form {
   }
 }
 
-export default RegisterForm;
+export default withRouter(RegisterForm);
