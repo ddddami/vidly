@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-hot-toast";
 import _ from "lodash";
 import MoviesTable from "./MoviesTable";
 import ListGroup from "./common/ListGroup";
@@ -33,7 +34,7 @@ class Movies extends Component {
       await deleteMovie(movie._id);
     } catch (ex) {
       if (ex.response && ex.response.status === 404) {
-        alert("This movie has already been deleted.");
+        toast.error("This movie has already been deleted.");
         this.setState({ movies: orignalMovies });
       }
     }

@@ -1,10 +1,11 @@
 import React from "react";
+import { Navigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 import Joi from "joi";
 import Form from "./common/Form";
 import withRouter from "../hoc/withRouter";
 import { getGenres } from "../services/genreService";
 import { getMovie, saveMovie } from "../services/movieService";
-import { Navigate } from "react-router-dom";
 
 class MovieForm extends Form {
   state = {
@@ -65,7 +66,20 @@ class MovieForm extends Form {
     };
   }
   doSubmit = () => {
-    saveMovie(this.state.data);
+    const { data } = this.state;
+    toast.promise(
+      saveMovie(data),
+      {
+        loading: "Loading",
+        success: () => `Successfully saved ${data.title}`,
+        // error: (err) => `This just happened: ${err.message}`,
+      },
+      {
+        style: {
+          minWidth: "250px",
+        },
+      }
+    );
     return this.props.navigate("/movies");
   };
 
