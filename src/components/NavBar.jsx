@@ -1,6 +1,12 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { logout } from "../services/authService";
 const NavBar = ({ user }) => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <Link to="/" className="px-2 navbar-brand">
@@ -25,7 +31,7 @@ const NavBar = ({ user }) => {
           </li>
           <li className="nav-item">
             {user ? (
-              <NavLink to="/logout" className="px-2 nav-link">
+              <NavLink onClick={handleLogout} className="px-2 nav-link">
                 Logout
               </NavLink>
             ) : (
