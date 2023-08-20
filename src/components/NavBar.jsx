@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
-const NavBar = () => {
+const NavBar = ({ user }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <Link to="/" className="px-2 navbar-brand">
@@ -24,14 +24,24 @@ const NavBar = () => {
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/login" className="px-2 nav-link">
-              Login
-            </NavLink>
+            {user ? (
+              <NavLink to="/logout" className="px-2 nav-link">
+                Logout
+              </NavLink>
+            ) : (
+              <NavLink to="/login" className="px-2 nav-link">
+                Login
+              </NavLink>
+            )}
           </li>
           <li className="nav-item">
-            <NavLink to="/register" className="px-2 nav-link">
-              Register
-            </NavLink>
+            {user ? (
+              <p className="px-2 nav-link">{user.name}</p>
+            ) : (
+              <NavLink to="/register" className="px-2 m-0 nav-link">
+                Register
+              </NavLink>
+            )}
           </li>
         </ul>
       </div>

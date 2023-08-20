@@ -8,7 +8,9 @@ const Layout = () => {
   const [user, setUser] = useState(null);
   useEffect(() => {
     getUser()
-      .then((res) => setUser(res.data))
+      .then((res) => {
+        setUser(res.data);
+      })
       .catch();
   }, []);
   return (
