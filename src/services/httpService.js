@@ -13,7 +13,7 @@ axios.interceptors.response.use(null, (error) => {
   }
   return Promise.reject(error);
 });
-
+axios.defaults.headers.common["Authorization"] = `JWT ${getJwt()}`;
 export default {
   get: axios.get,
   post: axios.post,
