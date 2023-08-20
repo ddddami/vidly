@@ -24,7 +24,11 @@ class RegisterForm extends Form {
       const { data } = this.state;
       await UserService.register(data);
       // To improve: (Don't assume call to server for login wont fail)
-      const { data: result } = await login(data.username, data.password);
+      const { data: result } = await login(
+        data.username,
+        data.password,
+        data.name
+      );
       localStorage.setItem("access", result.access);
       localStorage.setItem("refresh", result.access);
       this.props.navigate("/");
