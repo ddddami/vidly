@@ -3,7 +3,7 @@ import config from "../config.json";
 const apiEndpoint = config.apiUrl + "/auth/users/";
 
 export function getUser() {
-  return http.get(apiEndpoint);
+  return http.get(apiEndpoint + "me/");
 }
 
 export function register(user) {
