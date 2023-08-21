@@ -6,6 +6,7 @@ import Form from "./common/Form";
 import withRouter from "../hoc/withRouter";
 import { getGenres } from "../services/genreService";
 import { getMovie, saveMovie } from "../services/movieService";
+import UserContext from "../context/UserContext";
 
 class MovieForm extends Form {
   state = {
@@ -36,6 +37,7 @@ class MovieForm extends Form {
       return this.props.navigate("/not-found");
     }
   }
+
   async componentDidMount() {
     await this.populateGenres();
     await this.populateMovies();
@@ -85,7 +87,7 @@ class MovieForm extends Form {
 
   render() {
     if (this.state.redirect) return <Navigate to="/not-found" />;
-
+    if (!this.context.user) return <Navigate to="/login" />;
     return (
       <div>
         <h1>Movies Form</h1>
@@ -101,4 +103,5 @@ class MovieForm extends Form {
   }
 }
 
+MovieForm.contextType = UserContext; // or in class; static contextType = UserContext (value: this.context)
 export default withRouter(MovieForm);
