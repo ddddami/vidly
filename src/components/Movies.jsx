@@ -10,6 +10,7 @@ import { getMovies, deleteMovie } from "../services/movieService";
 import { getGenres } from "../services/genreService";
 import paginate from "../utils/paginate";
 import filter from "../utils/filter";
+import UserContext from "../context/UserContext";
 class Movies extends Component {
   state = {
     movies: [],
@@ -35,8 +36,11 @@ class Movies extends Component {
     } catch (ex) {
       if (ex.response && ex.response.status === 404) {
         toast.error("This movie has already been deleted.");
-        this.setState({ movies: orignalMovies });
       }
+      if (ex.response && ex.response.status === 401) {
+        toast.error("You don't have the permission to delete a movie.");
+      }
+      this.setState({ movies: orignalMovies });
     }
   };
 
@@ -99,43 +103,51 @@ class Movies extends Component {
     if (allMovies.length === 0)
       return <p>There are no movies in the database!</p>;
     return (
-      <div className="row">
-        <div className="col-3">
-          <ListGroup
-            items={genres}
-            selectedItem={selectedGenre}
-            onItemChange={this.handleGenreSelect}
-            targetName="name"
-            targetValue="_id"
-          />
-        </div>
-        <div className="col">
-          <Link className="mb-3 btn btn-primary" to="/movies/new">
-            New Movie
-          </Link>
-          {allMovies.length && (
-            <p style={{ margin: 0 }}>Showing {count} movies in the database!</p>
-          )}
+      <UserContext.Consumer>
+        {({ user }) => (
+          <div className="row">
+            <div className="col-3">
+              <ListGroup
+                items={genres}
+                selectedItem={selectedGenre}
+                onItemChange={this.handleGenreSelect}
+                targetName="name"
+                targetValue="_id"
+              />
+            </div>
+            <div className="col">
+              {user && (
+                <Link className="mb-3 btn btn-primary" to="/movies/new">
+                  New Movie
+                </Link>
+              )}
+              {allMovies.length && (
+                <p style={{ margin: 0 }}>
+                  Showing {count} movies in the database!
+                </p>
+              )}
 
-          <SearchBox
-            onSearch={this.handleSearch}
-            value={this.state.searchQuery}
-          />
-          <MoviesTable
-            movies={movies}
-            onDelete={this.handleDelete}
-            onToggleLike={this.handleToggleLike}
-            onSort={this.handleSort}
-            sortColumn={sortColumn}
-          />
-          <Pagination
-            itemsCount={count}
-            currentPage={currentPage}
-            pageSize={pageSize}
-            onPageChange={this.handlePageChange}
-          />
-        </div>
-      </div>
+              <SearchBox
+                onSearch={this.handleSearch}
+                value={this.state.searchQuery}
+              />
+              <MoviesTable
+                movies={movies}
+                onDelete={this.handleDelete}
+                onToggleLike={this.handleToggleLike}
+                onSort={this.handleSort}
+                sortColumn={sortColumn}
+              />
+              <Pagination
+                itemsCount={count}
+                currentPage={currentPage}
+                pageSize={pageSize}
+                onPageChange={this.handlePageChange}
+              />
+            </div>
+          </div>
+        )}
+      </UserContext.Consumer>
     );
   }
 }

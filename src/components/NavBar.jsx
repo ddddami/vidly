@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import UserContext from "../context/UserContext";
 import { logout } from "../services/authService";
-const NavBar = ({ user }) => {
+
+const NavBar = () => {
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
