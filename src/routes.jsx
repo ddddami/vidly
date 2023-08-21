@@ -7,6 +7,7 @@ import MovieForm from "./components/MovieForm";
 import ErrorPage from "./pages/ErrorPage";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
+import PrivateRoutes from "./components/PrivateRoutes";
 
 const router = createBrowserRouter([
   {
@@ -16,11 +17,14 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/movies" /> },
       { path: "/movies", element: <Movies /> },
-      { path: "/movies/:id", element: <MovieForm /> },
       { path: "/customers", element: <Customers /> },
       { path: "/rentals", element: <Rentals /> },
       { path: "/login", element: <LoginForm /> },
       { path: "/register", element: <RegisterForm /> },
+      {
+        element: <PrivateRoutes />,
+        children: [{ path: "/movies/:id", element: <MovieForm /> }],
+      },
     ],
   },
 ]);
