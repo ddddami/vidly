@@ -2,8 +2,24 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Like from "./common/Like";
 import Table from "./common/Table";
+import UserContext from "../context/UserContext";
 
 class MoviesTable extends Component {
+  checkColumns = () => {
+    const cols = this.columns.filter((col) => typeof col === "object");
+    this.columns = cols;
+  };
+  deleteColumn = {
+    key: "delete",
+    content: (movie) => (
+      <button
+        onClick={() => this.props.onDelete(movie)}
+        className="btn btn-sm btn-danger"
+      >
+        Delete
+      </button>
+    ),
+  };
   columns = [
     {
       path: "title",
@@ -26,30 +42,26 @@ class MoviesTable extends Component {
         />
       ),
     },
-    {
-      key: "delete",
-      content: (movie) => (
-        <button
-          onClick={() => this.props.onDelete(movie)}
-          className="btn btn-sm btn-danger"
-        >
-          Delete
-        </button>
-      ),
-    },
+    this.context.user?.isAdmin ? this.deleteColumn : undefined,
   ];
 
   render() {
     const { movies, sortColumn, onSort } = this.props;
+    this.checkColumns();
     return (
-      <Table
-        columns={this.columns}
-        data={movies}
-        sortColumn={sortColumn}
-        onSort={onSort}
-      />
+      <UserContext.Consumer>
+        {() => (
+          <Table
+            columns={this.columns}
+            data={movies}
+            sortColumn={sortColumn}
+            onSort={onSort}
+          />
+        )}
+      </UserContext.Consumer>
     );
   }
 }
 
+MoviesTable.contextType = UserContext;
 export default MoviesTable;
