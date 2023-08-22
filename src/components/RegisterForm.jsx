@@ -23,7 +23,7 @@ class RegisterForm extends Form {
     try {
       const { data } = this.state;
       await UserService.register(data);
-      // To improve: (Don't assume call to server for login wont fail)
+      // To improve: (Errors for login or better still, a better approach.)
       const { data: result } = await login(
         data.username,
         data.password,
@@ -31,7 +31,7 @@ class RegisterForm extends Form {
       );
       localStorage.setItem("access", result.access);
       localStorage.setItem("refresh", result.access);
-      this.props.navigate("/");
+      window.location = "/";
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         const errors = { ...this.state.errors };

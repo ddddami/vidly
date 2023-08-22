@@ -17,7 +17,6 @@ class LoginForm extends Form {
     username: Joi.string().required().label("Username"),
     password: Joi.string().required().label("Password"),
   });
-
   doSubmit = async () => {
     // Call the server
     try {
@@ -25,7 +24,7 @@ class LoginForm extends Form {
       const { data: result } = await login(data.username, data.password);
       localStorage.setItem("access", result.access);
       localStorage.setItem("refresh", result.access);
-      this.props.navigate("/");
+      window.location = "/";
     } catch (ex) {
       if (ex.response && ex.response.status === 401) {
         const errors = { ...this.state.errors };

@@ -8,7 +8,7 @@ const NavBar = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
-    navigate("/");
+    window.location = "/";
   };
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
