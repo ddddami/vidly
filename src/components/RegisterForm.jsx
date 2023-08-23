@@ -1,5 +1,6 @@
 import React from "react";
 import Joi from "joi";
+import { LeapFrog } from "@uiball/loaders";
 import * as UserService from "../services/userService";
 import Form from "./common/Form";
 import withRouter from "../hoc/withRouter";
@@ -13,6 +14,7 @@ class RegisterForm extends Form {
       name: "",
     },
     errors: {},
+    isLoading: false,
   };
   schema = Joi.object({
     username: Joi.string().required().label("Username"),
@@ -21,6 +23,7 @@ class RegisterForm extends Form {
   });
   doSubmit = async () => {
     try {
+      this.setState({ isLoading: true });
       const { data } = this.state;
       await UserService.register(data);
       // To improve: (Errors for login or better still, a better approach.)
@@ -39,8 +42,10 @@ class RegisterForm extends Form {
         this.setState({ errors });
       }
     }
+    this.setState({ isLoading: false });
   };
   render() {
+    const { isLoading } = this.state;
     return (
       <div>
         <h1>Register</h1>
@@ -48,7 +53,14 @@ class RegisterForm extends Form {
           {this.renderInput("username", "Username", "text", true)}
           {this.renderInput("password", "Password", "password")}
           {this.renderInput("name", "Name")}
-          {this.renderButton("Register")}
+          {this.renderButton(
+            isLoading ? (
+              <LeapFrog size={31} speed={2.5} color="white" />
+            ) : (
+              "Register"
+            ),
+            isLoading
+          )}
         </form>
       </div>
     );

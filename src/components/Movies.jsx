@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import { Waveform } from "@uiball/loaders";
 import _ from "lodash";
 import MoviesTable from "./MoviesTable";
 import ListGroup from "./common/ListGroup";
@@ -20,11 +21,14 @@ class Movies extends Component {
     selectedGenre: "",
     searchQuery: "",
     sortColumn: { path: "title", order: "asc" },
+    isLoading: false,
   };
   async componentDidMount() {
+    this.setState({ isLoading: true });
     const { data } = await getGenres();
     const { data: movies } = await getMovies();
     const genres = [{ _id: "", name: "All Genres" }, ...data];
+    this.setState({ isLoading: false });
     this.setState({ movies, genres });
   }
   handleDelete = async (movie) => {
@@ -97,11 +101,17 @@ class Movies extends Component {
       selectedGenre,
       sortColumn,
       movies: allMovies,
+      isLoading,
     } = this.state;
 
     const { count, data: movies } = this.getPagedData();
-    if (allMovies.length === 0)
-      return <p>There are no movies in the database!</p>;
+
+    if (isLoading)
+      return (
+        <div className="center">
+          <Waveform size={40} lineWeight={3.5} speed={1} color="black" />
+        </div>
+      );
     return (
       <UserContext.Consumer>
         {({ user }) => (

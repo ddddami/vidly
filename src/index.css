@@ -12,3 +12,10 @@ body {
 .outline:focus {
   box-shadow: 0 0 0 2px !important;
 }
+.center {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}

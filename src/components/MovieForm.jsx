@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import { LeapFrog } from "@uiball/loaders";
 import Joi from "joi";
 import Form from "./common/Form";
 import withRouter from "../hoc/withRouter";
@@ -18,6 +19,7 @@ class MovieForm extends Form {
     errors: {},
     genres: [],
     redirect: false,
+    isLoading: false,
   };
   async populateGenres() {
     const { data: genres } = await getGenres();
@@ -67,6 +69,7 @@ class MovieForm extends Form {
     };
   }
   doSubmit = () => {
+    this.setState({ isLoading: true });
     const { data } = this.state;
     toast.promise(
       saveMovie(data),
@@ -81,11 +84,13 @@ class MovieForm extends Form {
         },
       }
     );
+    this.setState({ isLoading: false });
     return this.props.navigate("/movies");
   };
 
   render() {
     if (this.state.redirect) return <Navigate to="/not-found" />;
+    const { isLoading } = this.state;
     return (
       <div>
         <h1>Movies Form</h1>
@@ -94,7 +99,14 @@ class MovieForm extends Form {
           {this.renderSelect("genreId", "Genre", this.state.genres)}
           {this.renderInput("numberInStock", "Number In Stock", "number")}
           {this.renderInput("dailyRentalRate", "Rate", "number")}
-          {this.renderButton("Save")}
+          {this.renderButton(
+            isLoading ? (
+              <LeapFrog size={31} speed={2.5} color="black" />
+            ) : (
+              "Save"
+            ),
+            isLoading
+          )}
         </form>
       </div>
     );
