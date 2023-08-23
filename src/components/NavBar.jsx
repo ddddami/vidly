@@ -1,58 +1,73 @@
 import React, { useContext } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import { logout } from "../services/authService";
 
 const NavBar = () => {
   const { user } = useContext(UserContext);
-  const navigate = useNavigate();
   const handleLogout = () => {
     logout();
     window.location = "/";
   };
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
-      <Link to="/" className="px-2 navbar-brand">
-        Vidly
-      </Link>
-      <div className="collapse navbar-collapse" id="navbarNav">
-        <ul className="navbar-nav">
-          <li className="nav-item">
-            <NavLink to="/movies" className="px-2 nav-link">
-              Movies
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/customers" className="px-2 nav-link">
-              Customers
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/rentals" className="px-2 nav-link">
-              Rentals
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            {user ? (
-              <NavLink onClick={handleLogout} className="px-2 nav-link">
-                Logout
+    <nav className="navbar navbar-expand-lg bg-body-tertiary">
+      <div className="container-fluid">
+        <Link to="/" className="navbar-brand">
+          Vidly
+        </Link>
+
+        <button
+          className="navbar-toggler outline"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            <li className="nav-item">
+              <NavLink to="/movies" className="nav-link">
+                Movies
               </NavLink>
-            ) : (
-              <NavLink to="/login" className="px-2 nav-link">
-                Login
+            </li>
+            <li className="nav-item">
+              <NavLink to="/customers" className="nav-link">
+                Customers
               </NavLink>
-            )}
-          </li>
-          <li className="nav-item">
-            {user ? (
-              <p className="px-2 nav-link">{user.name}</p>
-            ) : (
-              <NavLink to="/register" className="px-2 m-0 nav-link">
-                Register
+            </li>
+            <li className="nav-item">
+              <NavLink to="/rentals" className="nav-link">
+                Rentals
               </NavLink>
-            )}
-          </li>
-        </ul>
+            </li>
+
+            <li className="nav-item">
+              {user ? (
+                <p className="nav-link mb-0">{user.name}</p>
+              ) : (
+                <NavLink to="/register" className="nav-link">
+                  Register
+                </NavLink>
+              )}
+            </li>
+            <li className="nav-item">
+              {user ? (
+                <NavLink onClick={handleLogout} className="nav-link">
+                  Logout
+                </NavLink>
+              ) : (
+                <NavLink to="/login" className="nav-link">
+                  Login
+                </NavLink>
+              )}
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
   );
