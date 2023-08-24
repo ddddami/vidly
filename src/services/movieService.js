@@ -15,7 +15,7 @@ export function saveMovie(movie) {
     delete body._id;
     return http.put(movieUrl(movie._id), body);
   }
-  return http.post(moviesUrl, movie);
+  return http.post(moviesUrl + '/', movie);
 }
 export function deleteMovie(id) {
   return http.delete(movieUrl(id));

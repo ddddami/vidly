@@ -68,11 +68,13 @@ class MovieForm extends Form {
       genreId: movie.genre._id,
     };
   }
-  doSubmit = () => {
+  doSubmit = async () => {
     this.setState({ isLoading: true });
     const { data } = this.state;
+    const savePromise = saveMovie(data);
+    await savePromise;
     toast.promise(
-      saveMovie(data),
+      savePromise,
       {
         loading: "Loading",
         success: () => `Successfully saved ${data.title}`,
