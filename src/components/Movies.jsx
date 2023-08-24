@@ -116,7 +116,7 @@ class Movies extends Component {
       <UserContext.Consumer>
         {({ user }) => (
           <div className="row">
-            <div className="col-3">
+            <div className="col-sm-auto col-md-4 col-lg-3 col-xl-2">
               <ListGroup
                 items={genres}
                 selectedItem={selectedGenre}
